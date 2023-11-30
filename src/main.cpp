@@ -403,7 +403,7 @@ void onGlobalAdd(void*, wl_registry* registry, uint32_t name, const char* interf
 	auto reg = HandleGlobalHelper { registry, name, interface };
 	if (reg.handle(compositor, wl_compositor_interface, 4)) return;
 	if (reg.handle(shm, wl_shm_interface, 1)) return;
-	if (reg.handle(wlrLayerShell, zwlr_layer_shell_v1_interface, 4)) return;
+	if (reg.handle(wlrLayerShell, zwlr_layer_shell_v1_interface, 1)) return;
 	if (reg.handle(xdgOutputManager, zxdg_output_manager_v1_interface, 3)) return;
 	if (reg.handle(xdgWmBase, xdg_wm_base_interface, 2)) {
 		xdg_wm_base_add_listener(xdgWmBase, &xdgWmBaseListener, nullptr);
