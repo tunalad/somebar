@@ -266,7 +266,11 @@ void Bar::renderStatus()
 	cairo_fill(_painter);
 
 	_x = start;
-	renderComponent(_statusCmp);
+	setColorScheme(colorInactive, false);
+	if (_statusCmp.width() > 0)
+	{
+		renderComponent(_statusCmp);
+	}
 }
 
 void Bar::setColorScheme(const ColorScheme& scheme, bool invert)
