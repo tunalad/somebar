@@ -10,6 +10,8 @@
 #include "pango/pango-fontmap.h"
 #include "pango/pango-layout.h"
 
+const std::string BarComponent::emptyString = "";
+
 const zwlr_layer_surface_v1_listener Bar::_layerSurfaceListener = {
 	[](void* owner, zwlr_layer_surface_v1*, uint32_t serial, uint32_t width, uint32_t height)
 	{
@@ -225,9 +227,11 @@ void Bar::render()
 	_x = 0;
 
 	renderTags();
+	renderLayout();
 	setColorScheme(_selected ? colorActive : colorInactive);
-	renderComponent(_layoutCmp);
-	renderComponent(_titleCmp);
+	setColorScheme(_titleCmp.getText().empty() ? colorInactive : colorActive);
+	//renderComponent(_layoutCmp);
+	/renderComponent(_titleCmp);
 	renderStatus();
 
 	_painter = nullptr;
@@ -245,16 +249,29 @@ void Bar::renderTags()
 			tag.state & TagState::Active ? colorActive : colorInactive,
 			tag.state & TagState::Urgent);
 		renderComponent(tag.component);
-		auto indicators = std::min(tag.numClients, static_cast<int>(_bufs->height/2));
-		for (auto ind = 0; ind < indicators; ind++) {
-			auto w = ind == tag.focusedClient ? 7 : 1;
-			cairo_move_to(_painter, tag.component.x, ind*2+0.5);
-			cairo_rel_line_to(_painter, w, 0);
-			cairo_close_path(_painter);
+
+		if(!tag.numClients)
+			continue;
+
+		int s = barfont.height / 9;
+		int w = barfont.height / 6 + 2;
+		if (tag.focusedClient != -1) {
+			cairo_rectangle(_painter, tag.component.x + s, s, w, w);
+			cairo_fill(_painter);
+		} else {
+			cairo_rectangle(_painter, (double)(tag.component.x + s) + 0.5, (double)(s) + 0.5, w, w);
 			cairo_set_line_width(_painter, 1);
 			cairo_stroke(_painter);
 		}
 	}
+}
+
+
+void Bar::renderLayout()
+{
+	// tbf we can just include renderComponent line at the bottom of renderTags
+	setColorScheme(colorInactive, false);
+	renderComponent(_layoutCmp);
 }
 
 void Bar::renderStatus()

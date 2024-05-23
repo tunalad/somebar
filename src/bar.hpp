@@ -19,6 +19,12 @@ public:
 	void setText(const std::string& text);
 	wl_unique_ptr<PangoLayout> pangoLayout;
 	int x {0};
+
+	const std::string& getText() const {
+		return _text ? *_text : emptyString;
+	}
+private:
+	static const std::string emptyString;
 };
 
 struct Tag {
@@ -50,6 +56,7 @@ class Bar {
 	void layerSurfaceConfigure(uint32_t serial, uint32_t width, uint32_t height);
 	void render();
 	void renderTags();
+	void renderLayout();
 	void renderStatus();
 
 	// low-level rendering
