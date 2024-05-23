@@ -231,7 +231,7 @@ void Bar::render()
 	setColorScheme(_selected ? colorActive : colorInactive);
 	setColorScheme(_titleCmp.getText().empty() ? colorInactive : colorActive);
 	//renderComponent(_layoutCmp);
-	/renderComponent(_titleCmp);
+	renderComponent(_titleCmp);
 	renderStatus();
 
 	_painter = nullptr;
